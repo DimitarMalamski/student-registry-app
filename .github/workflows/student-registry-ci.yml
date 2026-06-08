@@ -1,4 +1,4 @@
-name: Student Registry CI
+name: Student Registry CI/CD
 
 on:
   push:
@@ -34,3 +34,15 @@ jobs:
 
       - name: Run Tests
         run: npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Deploy to Render
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_TOKEN }}
